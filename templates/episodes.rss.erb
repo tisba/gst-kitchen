@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Geekstammtisch</title>
+        <link>http://geekstammtisch.de</link>
+        <atom:link rel="self" href="<%= podcast.feed_url(podcast.current_format) %>" type="application/rss+xml" title="<%= podcast.current_format.file_ext.upcase %> Audio"/>
+        <% podcast.alternative_formats.each do |format| %>
+        <atom:link rel="alternate" href="<%= podcast.feed_url(format) %>" type="application/rss+xml" title="<%= format.file_ext.upcase %> Audio"/>
+        <% end %>
+        <language>de-de</language>
+        <generator>gst-kitchen</generator>
+        <copyright>Geekstammtisch, cc-by-nc-sa</copyright>
+        <itunes:subtitle>Der heimelige Nerdgespräch über Webentwicklung, Ruby/Rails und mehr</itunes:subtitle>
+        <itunes:author>Dirk Breuer, Sebastian Cohnen</itunes:author>
+        <managingEditor>alle@geekstammtisch.de (Dirk Breuer, Sebastian Cohnen)</managingEditor>
+        <itunes:summary>Mehr oder weniger Regelmäßiger Stammtisch rund um Nerdthemen und Webdevelopment</itunes:summary>
+        <itunes:explicit>no</itunes:explicit>
+        <description>Mehr oder weniger Regelmäßiger Stammtisch rund um Nerdthemen und Webdevelopment</description>
+        <itunes:owner>
+            <itunes:name>Dirk Breuer, Sebastian Cohnen</itunes:name>
+            <itunes:email>alle@geekstammtisch.de</itunes:email>
+        </itunes:owner>
+
+        <itunes:image href="<%= podcast.cover_url %>"/>
+        
+        <itunes:category text="Technology"/>
+        <itunes:category text="Technology">
+            <itunes:category text="Gadgets"/>
+        </itunes:category>
+        <itunes:category text="Technology">
+            <itunes:category text="Tech News"/>
+        </itunes:category>
+        
+        <% podcast.episodes.each do |episode| %>
+        <item>
+          <title><%= episode.title %></title>
+          <itunes:explicit>no</itunes:explicit>
+          <itunes:author>Geekstammtisch</itunes:author>
+          <itunes:subtitle><%= episode.title %></itunes:subtitle>
+          <enclosure url="<%= podcast.episode_media_url(episode, current_format) %>" length="<%= episode.media(current_format).file_size %>" type="<%= current_format.mime_type %>"/>
+          <guid isPermaLink="false"><%= episode.handle %></guid>
+          <pubDate><%= episode.rfc_2822_date %></pubDate>
+          <itunes:duration><%= episode.media(current_format).duration %></itunes:duration>
+          <itunes:summary><![CDATA[<%= episode.summary %>]]></itunes:summary>
+          <description><![CDATA[<%= episode.description %>]]></description>
+          <atom:link rel="http://podlove.org/deep-link" href="<%= podcast.deep_link_url(episode) %>" />
+        </item>
+        <% end %>
+    </channel>
+</rss>
