@@ -4,6 +4,8 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require "trollop"
 require "gst-kitchen"
 
+require "fileutils"
+
 SUB_COMMANDS = %w(feed process list)
 global_opts = Trollop::options do
   banner "magic file deleting and copying utility"
@@ -29,6 +31,7 @@ when "process"
   production = Auphonic::Account.init_from_system.production(subcmd_opts[:uuid])
 
   podcast = Podcast.from_yaml("podcast.yml")
+  FileUtils.mkdir_p podcast.episodes_path
   episode = podcast.create_episode_from_auphonic production
 
   puts "Episode: #{episode}"
