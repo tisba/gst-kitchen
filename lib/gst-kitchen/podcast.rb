@@ -1,10 +1,20 @@
 class Podcast
-  attr_accessor :title, :subtitle, :summary, :handle, :website, :cover, :formats, :media_url, :episodes
-
-  attr_accessor :explicit
-
-  attr_accessor :rss_output_path,
+  attr_accessor :title,
+                :subtitle,
+                :author,
+                :email,
+                :language,
+                :summary,
+                :handle,
+                :website,
+                :cover,
+                :media_url,
+                :episodes,
+                :explicit,
+                :rss_output_path,
                 :episodes_path
+
+  attr_accessor :formats
 
   def self.from_yaml(yaml_file="podcast.yml")
     hash = YAML.load_file(yaml_file)
@@ -12,6 +22,9 @@ class Podcast
     podcast = self.new
     podcast.title = hash["title"]
     podcast.subtitle = hash["subtitle"]
+    podcast.author = hash["author"]
+    podcast.email = hash["email"]
+    podcast.language = hash["language"]
     podcast.summary = hash["summary"]
     podcast.handle = hash["handle"]
     podcast.website = hash["website"]

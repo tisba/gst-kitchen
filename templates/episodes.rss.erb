@@ -7,18 +7,18 @@
         <% podcast.other_formats(current_format).each do |format| %>
         <atom:link rel="alternate" href="<%= podcast.feed_url(format) %>" type="application/rss+xml" title="<%= format.file_ext.upcase %> Audio"/>
         <% end %>
-        <language>de-de</language>
+        <language><%= podcast.language %></language>
         <generator>gst-kitchen</generator>
-        <copyright>Geekstammtisch, cc-by-nc-sa</copyright>
+        <copyright><%= podcast.author %>, cc-by-nc-sa</copyright>
         <itunes:subtitle><%= podcast.subtitle %></itunes:subtitle>
-        <itunes:author>Dirk Breuer, Sebastian Cohnen</itunes:author>
-        <managingEditor>alle@geekstammtisch.de (Dirk Breuer, Sebastian Cohnen)</managingEditor>
+        <itunes:author><%= podcast.author %></itunes:author>
+        <managingEditor><%= podcast.email %> (<%= podcast.author %>)</managingEditor>
         <itunes:summary><%= podcast.summary %></itunes:summary>
         <itunes:explicit><%= podcast.explicit ? "yes" : "no" %></itunes:explicit>
         <description><%= podcast.summary %></description>
         <itunes:owner>
-            <itunes:name>Dirk Breuer, Sebastian Cohnen</itunes:name>
-            <itunes:email>alle@geekstammtisch.de</itunes:email>
+            <itunes:name><%= podcast.author %></itunes:name>
+            <itunes:email><%= podcast.email %></itunes:email>
         </itunes:owner>
 
         <itunes:image href="<%= podcast.cover_url %>"/>
@@ -35,7 +35,7 @@
         <item>
           <title><%= episode.title %></title>
           <itunes:explicit><%= podcast.explicit ? "yes" : "no" %></itunes:explicit>
-          <itunes:author>Geekstammtisch</itunes:author>
+          <itunes:author><%= podcast.author %></itunes:author>
           <itunes:subtitle><%= episode.title %></itunes:subtitle>
           <enclosure url="<%= podcast.episode_media_url(episode, current_format) %>" length="<%= episode.media[current_format.format]["size"] %>" type="<%= current_format.mime_type %>"/>
           <guid isPermaLink="false"><%= episode.handle %></guid>
