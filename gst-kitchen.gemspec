@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = GstKitchen::VERSION
   gem.authors       = ["Sebastian Cohnen"]
   gem.email         = ["sebastian.cohnen@gmx.net"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{gst-kitchen is a gem to publish podcasts like a nerd with auphonic!}
+  gem.summary       = %q{gst-kitchen is a gem to publish podcasts like a nerd with auphonic!}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "ruby-audioinfo"
+  gem.add_dependency "yajl-ruby"
+  gem.add_dependency "trollop"
   gem.add_dependency "rake"
 end

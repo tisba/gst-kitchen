@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require "trollop"
+require "gst-kitchen"
+
+SUB_COMMANDS = %w(feed process list)
+global_opts = Trollop::options do
+  banner "magic file deleting and copying utility"
+  opt :podcast, "path of podcast YAML specification", :default => "podcast.yml"
+  stop_on SUB_COMMANDS
+end
+
+case ARGV.shift
+when "feed"
+  subcmd_opts = Trollop::options do
+  end
+  Podcast.from_yaml(global_opts[:podcast]).render_all_feeds
+when "list"
+  productions = Auphonic::Account.init_from_system.productions
+  productions.each do |production|
+    puts "#{production.meta["uuid"]} => #{production.meta["metadata"]["title"]}"
+  end
+
+when "process"
+  subcmd_opts = Trollop::options do
+    opt :uuid, "Auphonic's production UUID", :type => :string
+  end
+  production = Auphonic::Account.init_from_system.production(subcmd_opts[:uuid])
+
+  podcast = Podcast.from_yaml("podcast.yml")
+  episode = podcast.create_episode_from_auphonic production
+
+  puts "Episode: #{episode}"
+  puts "Writing episode YAML to #{File.join(podcast.episodes_path, episode.handle.downcase)}.yml"
+  podcast.export_episode(episode)
+else
+  Trollop::die "unknown subcommand #{subcmd.inspect}"
+end

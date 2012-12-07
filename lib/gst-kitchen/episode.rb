@@ -1,9 +1,46 @@
-class Episode < Struct.new(:number, :name, :published_at, :summary, :description)
+class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :published_at, :summary, :description)
   include Comparable
 
-  def initialize
+  def self.from_auphonic(production)
+    data = production.meta
+    /GST(?<number>\d{3})/ =~ data["data"]["metadata"]["title"]
+
+    metadata = {
+      auphonic_uuid: data["data"]["uuid"],
+      number: number.to_i,
+      length: data["data"]["length"],
+      name: data["data"]["metadata"]["subtitle"].strip,
+      summary: data["data"]["metadata"]["summary"].strip,
+      description: data["data"]["metadata"]["summary"].strip
+    }
+
+    media = data["data"]["output_files"].each_with_object({}) do |item, obj|
+      obj[item["format"]] = {
+        "size" => item["size"],
+        "file_ext" => item["ending"]
+      }
+    end
+
+    episode = self.new
+
+    episode.number = metadata[:number]
+    episode.name   = metadata[:name]
+    episode.length = metadata[:length].round
+    episode.auphonic_uuid = metadata[:auphonic_uuid]
+    episode.published_at = Time.now
+    episode.summary = metadata[:summary]
+    episode.description = metadata[:description]
+    episode.media = media
+
+    episode
+  end
+
+  def self.from_yaml(yaml_file)
+    YAML.load_file(yaml_file)
+  end
+
+  def initialize(*args)
     super
-    @media = {}
   end
 
   def <=>(other)
@@ -22,8 +59,16 @@ class Episode < Struct.new(:number, :name, :published_at, :summary, :description
     self.published_at.rfc2822
   end
 
-  def media(format)
-    @media[format] ||= Media.new("media/#{self.handle.downcase}.#{format.file_ext}")
+  def duration
+    hours = length / (60 * 60)
+    minutes = (length - hours * 60 * 60) / 60
+    seconds = length % 60
+
+    "#{"%02i" % hours}:#{"%02i" % minutes}:#{"%02i" % seconds}"
+  end
+
+  def to_s
+    "#{title} (#{duration}) https://auphonic.com/engine/status/#{auphonic_uuid}"
   end
 end
 

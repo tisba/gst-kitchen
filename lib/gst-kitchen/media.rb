@@ -1,7 +1,16 @@
+# encoding: UTF-8
+
 class Media
-  class Format < Struct.new(:file_ext, :mime_type)
-    Mp3 = self.new("mp3", "audio/mpeg")
-    M4a = self.new("m4a", "audio/x-m4a")
+  class Format < Struct.new(:format, :file_ext, :mime_type)
+    Mp3 = self.new("mp3", "mp3", "audio/mpeg")
+    M4a = self.new("aac", "m4a", "audio/x-m4a")
+  end
+
+  def self.format(format)
+    case format
+    when :m4a_aac then Media::Format::M4a
+    when :mp3_mp3 then Media::Format::Mp3
+    end
   end
 
   def initialize(file)
@@ -11,6 +20,10 @@ class Media
 
   def length
     media_info["length"].to_i
+  end
+
+  def title
+    media_info["title"]
   end
 
   def file_size
@@ -34,7 +47,14 @@ class Media
   private
 
   def media_info
-    @media_info ||= AudioInfo.open(@file) { |info| info.to_h }
+    return @media_info if @media_info
+
+    @media_info = TagLib::FileRef.open(@file) do |ref|
+      {
+        "title" => ref.tag.title,
+        "length" => ref.audio_properties.length
+      }
+    end
   end
 end
 
