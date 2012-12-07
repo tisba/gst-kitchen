@@ -3,10 +3,11 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require "trollop"
 require "gst-kitchen"
+require "gst-kitchen/version"
 
 require "fileutils"
 
-SUB_COMMANDS = %w(feed process list)
+SUB_COMMANDS = %w(feed process list version)
 global_opts = Trollop::options do
   banner "magic file deleting and copying utility"
   opt :podcast, "path of podcast YAML specification", :default => "podcast.yml"
@@ -14,6 +15,8 @@ global_opts = Trollop::options do
 end
 
 case ARGV.shift
+when "version"
+  puts GstKitchen::VERSION
 when "feed"
   subcmd_opts = Trollop::options do
   end
