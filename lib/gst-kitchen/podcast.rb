@@ -1,7 +1,10 @@
 class Podcast
-  attr_accessor :title, :subtitle, :summary, :handle, :website, :cover, :formats, :media_url, :episodes, :episodes_path
+  attr_accessor :title, :subtitle, :summary, :handle, :website, :cover, :formats, :media_url, :episodes
 
   attr_accessor :explicit
+
+  attr_accessor :rss_output_path,
+                :episodes_path
 
   def self.from_yaml(yaml_file="podcast.yml")
     hash = YAML.load_file(yaml_file)
@@ -17,6 +20,7 @@ class Podcast
     podcast.explicit = hash["explicit"] || false
     podcast.formats = hash["formats"].map { |format| Media.format(format) }
     podcast.episodes_path = hash["episodes_path"] || "episodes/"
+    podcast.rss_output_path = hash["rss_output_path"] || "."
 
     podcast.load_episodes
 
@@ -67,8 +71,8 @@ class Podcast
 
   def render_feed(format)
     @current_format = format
-    template = ERB.new File.read("templates/episodes.rss.erb")
-    File.open(rss_file(format), "w") do |rss|
+    template = ERB.new File.read(File.join(File.dirname(__FILE__), "../..", "templates/episodes.rss.erb"))
+    File.open(File.join(rss_output_path, rss_file(format)), "w") do |rss|
       rss.write template.result(binding)
     end
   end
