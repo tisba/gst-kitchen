@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["sebastian.cohnen@gmx.net"]
   gem.description   = %q{gst-kitchen is a gem to publish podcasts like a nerd with auphonic!}
   gem.summary       = %q{gst-kitchen is a gem to publish podcasts like a nerd with auphonic!}
-  gem.homepage      = ""
+  gem.homepage      = "http://github.com/tisba/gst-kitchen"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
