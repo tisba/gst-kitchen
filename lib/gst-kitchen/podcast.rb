@@ -50,6 +50,12 @@ class Podcast
     Episode.from_auphonic production
   end
 
+  def episode_by_handle(handle)
+    self.episodes.find do |episode|
+      episode.handle.downcase == handle.downcase
+    end
+  end
+
   def feed_url(format)
     url = URI(self.website)
     url.path = "/#{rss_file(format)}"
