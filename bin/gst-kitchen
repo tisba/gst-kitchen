@@ -42,6 +42,47 @@ when "process"
   puts "Episode: #{episode}"
   puts "Writing episode YAML to #{File.join(podcast.episodes_path, episode.handle.downcase)}.yml"
   podcast.export_episode(episode)
+
+when "stats"
+  podcast = Podcast.from_yaml(global_opts[:podcast])
+  if STDIN.tty?
+    STDERR.puts "You need to pipe logs to gst-kitchen stats, e.g. cat logs/* | gst-kitchen stats"
+    exit
+  end
+  downloads = {}
+  while (logline = STDIN.gets)
+    # 93.194.154.91 - - [13/Dec/2012:16:22:38 +0100] "GET /episodes/gst000.m4a HTTP/1.1" 200 18676513 "-" "iTunes/11.0 (Macintosh; OS X 10.8.2) AppleWebKit/536.26.14"
+
+    / - - \[(?<date>.*?)\].*?(?<filename>gst\d{3}\....).*?2\d\d (?<size>\d+) / =~ logline
+
+    next unless filename
+
+    handle, format = filename.split(".")
+
+    downloads[handle] ||= {}
+    downloads[handle][format] ||= {}
+
+    media_format = format == "mp3" ? "mp3" : "aac"
+    downloads[handle][format][:size] ||= podcast.episode_by_handle(handle).media[media_format]["size"]
+    downloads[handle][format][:downloaded] ||= 0
+    downloads[handle][format][:downloaded] += size.to_i
+  end
+
+  total_downloads = {}
+  downloads.each do |handle, episode|
+    episode.each do |format, stats|
+      downloads[handle][format][:count] = stats[:downloaded].to_f / stats[:size]
+      total_downloads[handle] ||= {}
+      total_downloads[handle]["total_downloads"] ||= 0
+      total_downloads[handle]["total_downloads"] += downloads[handle][format][:count]
+    end
+  end
+
+  downloads.keys.each do |handle|
+    downloads[handle].merge!(total_downloads[handle])
+  end
+
+  puts downloads.to_yaml
 else
   Trollop::die "unknown subcommand #{subcmd.inspect}"
 end
