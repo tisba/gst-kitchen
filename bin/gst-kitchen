@@ -9,7 +9,7 @@ require "fileutils"
 
 SUB_COMMANDS = %w(feed process list version)
 global_opts = Trollop::options do
-  banner "magic file deleting and copying utility"
+  banner "Geekstammtischs Kitchen to publish podcats..."
   opt :podcast, "path of podcast YAML specification", :default => "podcast.yml"
   stop_on SUB_COMMANDS
 end
@@ -17,10 +17,12 @@ end
 case ARGV.shift
 when "version"
   puts GstKitchen::VERSION
+
 when "feed"
   subcmd_opts = Trollop::options do
   end
   Podcast.from_yaml(global_opts[:podcast]).render_all_feeds
+
 when "list"
   productions = Auphonic::Account.init_from_system.productions
   productions.each do |production|
@@ -33,7 +35,7 @@ when "process"
   end
   production = Auphonic::Account.init_from_system.production(subcmd_opts[:uuid])
 
-  podcast = Podcast.from_yaml("podcast.yml")
+  podcast = Podcast.from_yaml(global_opts[:podcast])
   FileUtils.mkdir_p podcast.episodes_path
   episode = podcast.create_episode_from_auphonic production
 
