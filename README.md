@@ -35,7 +35,7 @@ gst-kitchen assumes various conventions about (file) naming and URLs.
 
 Meta data from each episodes is read from your Auphonic production. The episode number is read from the `title`,
 which must start with `<handle><number>`. The episode name is read from `subtitle`, summary and description is
-set to Auphonic's `summary` field. Filesizes, playtime etc. is also read from the production.
+set to Auphonic's `summary` field. File sizes, playtime etc. are also read from the production.
 
 
 ## Usage
@@ -48,8 +48,8 @@ Then you need to create a `podcast.yml` containing your podcast metadata.
 You can take a look at https://github.com/tisba/gst-website/blob/master/podcast.yml as an example.
 Important fields are
 
-* basic meta data like, `title`, `subtutle`, `author`, `email` and `language`
-* `handle` is a short *handle* for your podcast. It can be an abbreviation or acronym, or anything you like. For geekstammtisch it's `GST`.
+* basic meta data like, `title`, `subtitle`, `author`, `email` and `language`
+* `handle` is a short *handle* for your podcast. It can be an abbreviation, acronym, or anything you like. For geekstammtisch it's `GST`.
 * base URLs for the website and media location
 * list of available audio formats: fileext_encoding, e.g. `m4a_aac` or `mp3_mp3`
 * `rss_output_path` specifies where the generated feeds will be located
