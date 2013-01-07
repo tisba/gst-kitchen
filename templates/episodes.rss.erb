@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title><%= podcast.title %></title>
-        <link><%= podcast.website %></link>
-        <atom:link rel="self" href="<%= podcast.feed_url(podcast.current_format) %>" type="application/rss+xml" title="<%= podcast.current_format.file_ext.upcase %> Audio"/>
-        <% podcast.other_formats(current_format).each do |format| %>
-        <atom:link rel="alternate" href="<%= podcast.feed_url(format) %>" type="application/rss+xml" title="<%= format.file_ext.upcase %> Audio"/>
+        <title><%= @podcast.title %></title>
+        <link><%= @podcast.website %></link>
+        <atom:link rel="self" href="<%= @podcast.feed_url(@format) %>" type="application/rss+xml" title="<%= @format.file_ext.upcase %> Audio"/>
+        <% @podcast.other_formats(@format).each do |format| %>
+        <atom:link rel="alternate" href="<%= @podcast.feed_url(format) %>" type="application/rss+xml" title="<%= format.file_ext.upcase %> Audio"/>
         <% end %>
-        <language><%= podcast.language %></language>
+        <language><%= @podcast.language %></language>
         <generator>gst-kitchen</generator>
-        <copyright><%= podcast.author %>, cc-by-nc-sa</copyright>
-        <itunes:subtitle><%= podcast.subtitle %></itunes:subtitle>
-        <itunes:author><%= podcast.author %></itunes:author>
-        <managingEditor><%= podcast.email %> (<%= podcast.author %>)</managingEditor>
-        <itunes:summary><%= podcast.summary %></itunes:summary>
-        <itunes:explicit><%= podcast.explicit ? "yes" : "no" %></itunes:explicit>
-        <description><%= podcast.summary %></description>
+        <copyright><%= @podcast.author %>, cc-by-nc-sa</copyright>
+        <itunes:subtitle><%= @podcast.subtitle %></itunes:subtitle>
+        <itunes:author><%= @podcast.author %></itunes:author>
+        <managingEditor><%= @podcast.email %> (<%= @podcast.author %>)</managingEditor>
+        <itunes:summary><%= @podcast.summary %></itunes:summary>
+        <itunes:explicit><%= @podcast.explicit ? "yes" : "no" %></itunes:explicit>
+        <description><%= @podcast.summary %></description>
         <itunes:owner>
-            <itunes:name><%= podcast.author %></itunes:name>
-            <itunes:email><%= podcast.email %></itunes:email>
+            <itunes:name><%= @podcast.author %></itunes:name>
+            <itunes:email><%= @podcast.email %></itunes:email>
         </itunes:owner>
 
-        <itunes:image href="<%= podcast.cover_url %>"/>
+        <itunes:image href="<%= @podcast.cover_url %>"/>
 
         <itunes:category text="Technology"/>
         <itunes:category text="Technology">
@@ -31,19 +31,19 @@
             <itunes:category text="Tech News"/>
         </itunes:category>
 
-        <% podcast.episodes.each do |episode| %>
+        <% @podcast.episodes.each do |episode| %>
         <item>
           <title><%= episode.title %></title>
-          <itunes:explicit><%= podcast.explicit ? "yes" : "no" %></itunes:explicit>
-          <itunes:author><%= podcast.author %></itunes:author>
+          <itunes:explicit><%= @podcast.explicit ? "yes" : "no" %></itunes:explicit>
+          <itunes:author><%= @podcast.author %></itunes:author>
           <itunes:subtitle><%= episode.title %></itunes:subtitle>
-          <enclosure url="<%= podcast.episode_media_url(episode, current_format) %>" length="<%= episode.media[current_format.format]["size"] %>" type="<%= current_format.mime_type %>"/>
+          <enclosure url="<%= @podcast.episode_media_url(episode, @format) %>" length="<%= episode.media[@format.format]["size"] %>" type="<%= @format.mime_type %>"/>
           <guid isPermaLink="false"><%= episode.handle %></guid>
           <pubDate><%= episode.rfc_2822_date %></pubDate>
           <itunes:duration><%= episode.duration %></itunes:duration>
           <itunes:summary><![CDATA[<%= episode.summary %>]]></itunes:summary>
-          <description><![CDATA[<%= episode.description %>]]></description>
-          <atom:link rel="http://podlove.org/deep-link" href="<%= podcast.deep_link_url(episode) %>" />
+          <description><![CDATA[<%= render_as_markdown episode.summary %>]]></description>
+          <atom:link rel="http://podlove.org/deep-link" href="<%= @podcast.deep_link_url(episode) %>" />
         </item>
         <% end %>
     </channel>

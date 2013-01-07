@@ -1,4 +1,4 @@
-class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :published_at, :summary, :description)
+class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :published_at, :summary)
   include Comparable
 
   def self.from_auphonic(production)
@@ -11,7 +11,6 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
       length: data["data"]["length"],
       name: data["data"]["metadata"]["subtitle"].strip,
       summary: data["data"]["metadata"]["summary"].strip,
-      description: data["data"]["metadata"]["summary"].strip
     }
 
     media = data["data"]["output_files"].each_with_object({}) do |item, obj|
@@ -29,7 +28,6 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
     episode.auphonic_uuid = metadata[:auphonic_uuid]
     episode.published_at = Time.now
     episode.summary = metadata[:summary]
-    episode.description = metadata[:description]
     episode.media = media
 
     episode
