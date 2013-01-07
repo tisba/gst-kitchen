@@ -60,6 +60,7 @@ when "stats"
     handle, format = filename.split(".")
 
     next unless episode = podcast.episode_by_handle(handle)
+    next unless ["mp3", "m4a"].include? format
 
     downloads[handle] ||= {}
     downloads[handle][format] ||= {}
