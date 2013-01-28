@@ -59,11 +59,14 @@ when "stats"
 
     handle, format = filename.split(".")
 
+    next unless episode = podcast.episode_by_handle(handle)
+
     downloads[handle] ||= {}
     downloads[handle][format] ||= {}
 
     media_format = format == "mp3" ? "mp3" : "aac"
-    downloads[handle][format][:size] ||= podcast.episode_by_handle(handle).media[media_format]["size"]
+
+    downloads[handle][format][:size] ||= episode.media[media_format]["size"]
     downloads[handle][format][:downloaded] ||= 0
     downloads[handle][format][:downloaded] += size.to_i
   end
