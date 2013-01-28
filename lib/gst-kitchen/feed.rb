@@ -1,5 +1,4 @@
 require 'redcarpet'
-require 'ruby-debug'
 
 class GstKitchen::Feed
 
