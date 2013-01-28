@@ -84,15 +84,10 @@ class Podcast
     self
   end
 
-  def current_format
-    @current_format
-  end
-
   def render_feed(format)
-    @current_format = format
-    template = ERB.new File.read(File.join(File.dirname(__FILE__), "../..", "templates/episodes.rss.erb"))
+    feed = GstKitchen::Feed.new format: format, template: "episodes"
     File.open(File.join(rss_output_path, rss_file(format)), "w") do |rss|
-      rss.write template.result(binding)
+      rss.write feed.to_xml(podcast: podcast)
     end
   end
 
@@ -112,6 +107,7 @@ class Podcast
   end
 
   private
+
   def rss_file(format)
     "episodes.#{format.file_ext}.rss"
   end
