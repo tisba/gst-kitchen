@@ -7,6 +7,7 @@ require "yaml"
 
 require "gst-kitchen/version"
 require "gst-kitchen/podcast"
+require "gst-kitchen/feed"
 require "gst-kitchen/episode"
 require "gst-kitchen/media"
 
