@@ -48,7 +48,7 @@
           <% unless episode.chapters.nil? %>
           <psc:chapters>
           <% episode.chapters.each do |chapter| %>
-            <psc:chapter start="<%= chapter.start %>" title="<%= chapter.title %>" />
+            <psc:chapter start="<%= chapter.start %>" title="<%= CGI.escape_html chapter.title %>" />
           <% end %>
           </psc:chapters>
           <% end %>

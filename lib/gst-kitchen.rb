@@ -1,6 +1,7 @@
 require "erb"
 require "time"
 require "uri"
+require "cgi"
 
 require "yajl"
 require "yaml"
