@@ -4,12 +4,14 @@ class Media
   class Format < Struct.new(:format, :file_ext, :mime_type)
     Mp3 = self.new("mp3", "mp3", "audio/mpeg")
     M4a = self.new("aac", "m4a", "audio/x-m4a")
+    Opus = self.new("opus", "opus", "audio/opus")
   end
 
   def self.format(format)
     case format
     when :m4a_aac then Media::Format::M4a
     when :mp3_mp3 then Media::Format::Mp3
+    when :opus_opus then Media::Format::Opus
     end
   end
 
