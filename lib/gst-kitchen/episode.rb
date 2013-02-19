@@ -34,6 +34,8 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
       Chapter.new(chapter["start"], chapter["title"])
     end
 
+    episode.chapters.sort!
+
     episode
   end
 
