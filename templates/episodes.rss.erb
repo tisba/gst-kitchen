@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:psc="http://podlove.org/simple-chapters" version="2.0">
     <channel>
         <title><%= @podcast.title %></title>
         <link><%= @podcast.website %></link>
@@ -44,6 +44,14 @@
           <itunes:summary><![CDATA[<%= episode.summary %>]]></itunes:summary>
           <description><![CDATA[<%= render_as_markdown episode.summary %>]]></description>
           <atom:link rel="http://podlove.org/deep-link" href="<%= @podcast.deep_link_url(episode) %>" />
+
+          <% unless episode.chapters.nil? %>
+          <psc:chapters>
+          <% episode.chapters.each do |chapter| %>
+            <psc:chapter start="<%= chapter.start %>" title="<%= chapter.title %>" />
+          <% end %>
+          </psc:chapters>
+          <% end %>
         </item>
         <% end %>
     </channel>
