@@ -1,9 +1,11 @@
 class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :published_at, :summary, :chapters)
   include Comparable
 
-  def self.from_auphonic(production)
+  attr_accessor :podcast
+
+  def self.from_auphonic(podcast, production)
     data = production.meta
-    /GST(?<number>\d{3})/ =~ data["data"]["metadata"]["title"]
+    /#{podcast.handle}(?<number>\d{3})/ =~ data["data"]["metadata"]["title"]
 
     metadata = {
       auphonic_uuid: data["data"]["uuid"],
@@ -39,12 +41,15 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
     episode
   end
 
-  def self.from_yaml(yaml_file)
-    YAML.load_file(yaml_file)
+  def self.from_yaml(podcast, yaml_file)
+    episode = YAML.load_file(yaml_file)
+    episode.podcast = podcast
+    episode
   end
 
-  def initialize(*args)
-    super
+  def initialize(podcast=nil, *args)
+    @podcast = podcast
+    super(*args)
   end
 
   def <=>(other)
@@ -56,7 +61,7 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
   end
 
   def handle
-    "GST#{"%03i" % self.number}"
+    "#{podcast.handle}#{"%03i" % self.number}"
   end
 
   def rfc_2822_date
