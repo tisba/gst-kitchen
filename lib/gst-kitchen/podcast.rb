@@ -42,12 +42,12 @@ class Podcast
 
   def load_episodes
     self.episodes = Dir[File.join(self.episodes_path, "#{handle.downcase}*.yml")].map do |yml|
-      Episode.from_yaml(yml)
+      Episode.from_yaml(self, yml)
     end
   end
 
   def create_episode_from_auphonic(production)
-    Episode.from_auphonic production
+    Episode.from_auphonic(self, production)
   end
 
   def episode_by_handle(handle)
