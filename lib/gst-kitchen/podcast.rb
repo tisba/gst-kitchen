@@ -76,7 +76,7 @@ class Podcast
 
   def deep_link_url(episode)
     url = URI(self.website)
-    url.fragment = "#{episode.number}:"
+    url.fragment = episode.handle
     url.to_s
   end
 
