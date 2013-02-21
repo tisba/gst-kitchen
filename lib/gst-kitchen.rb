@@ -1,6 +1,7 @@
 require "erb"
 require "time"
 require "uri"
+require "cgi"
 
 require "yajl"
 require "yaml"
@@ -8,6 +9,7 @@ require "yaml"
 require "gst-kitchen/version"
 require "gst-kitchen/podcast"
 require "gst-kitchen/feed"
+require "gst-kitchen/chapter"
 require "gst-kitchen/episode"
 require "gst-kitchen/media"
 
