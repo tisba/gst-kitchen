@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.required_ruby_version = '~> 1.9.3'
+  gem.required_ruby_version = '>= 1.9.3'
 
   gem.add_dependency "yajl-ruby"
   gem.add_dependency "trollop"
