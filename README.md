@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tisba/gst-kitchen.png)](https://travis-ci.org/tisba/gst-kitchen)
+
 # Geekstammtisch's Podcast Kitchen (gst-kitchen)
 
     Publishing podcats like a nerd!
@@ -9,6 +11,7 @@ The Geekstammtisch website and this gem is inspired by [fanboys-IGOR] [igor].
 
 **Note** that there might be some Geekstammtisch specific behavior left in this gem. If you find something,
 drop me a note!
+
 
 
 ## Installation
