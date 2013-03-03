@@ -22,7 +22,7 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
       }
     end
 
-    episode = self.new
+    episode = self.new podcast
 
     episode.number = metadata[:number]
     episode.name   = metadata[:name]
