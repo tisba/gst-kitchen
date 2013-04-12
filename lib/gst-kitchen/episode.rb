@@ -4,6 +4,28 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
   attr_accessor :podcast
 
   class << self
+    def from_auphonic(podcast, production)
+      metadata = extract_episode_data_from_auphonic(podcast, production)
+
+      episode = self.new podcast
+      episode.number = metadata[:number]
+      episode.name   = metadata[:name]
+      episode.length = metadata[:length].round
+      episode.auphonic_uuid = metadata[:auphonic_uuid]
+      episode.published_at = Time.now
+      episode.summary = metadata[:summary]
+      episode.media = metadata[:media]
+      episode.chapters = metadata[:chapters]
+
+      episode
+    end
+
+    def from_yaml(podcast, yaml_file)
+      episode = YAML.load_file(yaml_file)
+      episode.podcast = podcast
+      episode
+    end
+
     def extract_episode_number(handle, title)
       title.match(/#{handle}(\d{3})/) { |match| match[1].to_i }
     end
@@ -26,33 +48,13 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
         }
       end
 
-      metadata[:chapters] = data["data"]["chapters"].map do |chapter|
-        Chapter.new(chapter["start"], chapter["title"])
-      end.sort
+      metadata[:chapters] = if data["data"]["chapters"]
+        metadata[:chapters] = data["data"]["chapters"].map do |chapter|
+          Chapter.new(chapter["start"], chapter["title"])
+        end.sort
+      end
 
       metadata
-    end
-
-    def from_auphonic(podcast, production)
-      metadata = extract_episode_data_from_auphonic(podcast, production)
-
-      episode = self.new podcast
-      episode.number = metadata[:number]
-      episode.name   = metadata[:name]
-      episode.length = metadata[:length].round
-      episode.auphonic_uuid = metadata[:auphonic_uuid]
-      episode.published_at = Time.now
-      episode.summary = metadata[:summary]
-      episode.media = metadata[:media]
-      episode.chapters = metadata[:chapters]
-
-      episode
-    end
-
-    def from_yaml(podcast, yaml_file)
-      episode = YAML.load_file(yaml_file)
-      episode.podcast = podcast
-      episode
     end
   end
 

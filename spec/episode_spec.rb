@@ -2,12 +2,53 @@ require "spec_helper"
 require "date"
 
 describe Episode do
-  describe ".extract_episode_number" do
-    it "should extract the episode number from the full handle" do
-      Episode.extract_episode_number("GST", "GST000").should == 0
-      Episode.extract_episode_number("meh!", "meh!042").should == 42
+  it "should extract the episode number from the full handle" do
+    Episode.extract_episode_number("GST", "GST000").should == 0
+    Episode.extract_episode_number("meh!", "meh!042").should == 42
+  end
+
+
+  describe "Auphonic" do
+    it "should be build on metadata provided by auphonic production" do
+      podcast = double("podcast")
+      podcast.stub(:handle).and_return("GST")
+
+      now = Time.now
+      Time.stub(:now).and_return(now)
+
+      production = double("auphonic production")
+      production.should_receive(:meta).and_return({
+        "data" => {
+          "uuid" => "id",
+          "length" => 1234,
+          "metadata" => {
+            "title" => "GST023 - Rikeripsum",
+            "subtitle" => "Rikeripsum",
+            "summary" => "summary"
+          },
+          "output_files" => [
+            {
+              "format" => "mp3",
+              "size" => 1234,
+              "ending" => "mp3"
+            }
+          ]
+        }
+      })
+
+      episode = Episode.from_auphonic podcast, production
+      episode.number.should == 23
+      episode.name.should == "Rikeripsum"
+      episode.length.should == 1234
+      episode.auphonic_uuid.should == "id"
+      episode.published_at.should == now
+      episode.summary.should == "summary"
+
+      # episode.media
+      # episode.chapters
     end
   end
+
 
   it "should have a handle" do
     podcast = double("podcast")
@@ -46,6 +87,10 @@ describe Episode do
 
     subject.length = 0
     subject.duration.should == "00:00:00"
+  end
+
+  it "should be comparable" do
+    Episode.ancestors.should include Comparable
   end
 
   it "should be sortable (by episode number)" do
