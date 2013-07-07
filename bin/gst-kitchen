@@ -53,19 +53,19 @@ when "stats"
   while (logline = STDIN.gets)
     # 93.194.154.91 - - [13/Dec/2012:16:22:38 +0100] "GET /episodes/gst000.m4a HTTP/1.1" 200 18676513 "-" "iTunes/11.0 (Macintosh; OS X 10.8.2) AppleWebKit/536.26.14"
 
-    / - - \[(?<date>.*?)\].*?(?<filename>gst\d{3}\....).*?2\d\d (?<size>\d+) / =~ logline
+    / - - \[(?<date>.*?)\].*?(?<filename>gst\d{3}\..*?) .*?2\d\d (?<size>\d+) / =~ logline
 
     next unless filename
 
     handle, format = filename.split(".")
 
     next unless episode = podcast.episode_by_handle(handle)
-    next unless ["mp3", "m4a"].include? format
+    next unless ["mp3", "m4a", "opus"].include? format
 
     downloads[handle] ||= {}
     downloads[handle][format] ||= {}
 
-    media_format = format == "mp3" ? "mp3" : "aac"
+    media_format = ["mp3", "opus"].include?(format) ? format : "aac"
 
     downloads[handle][format][:size] ||= episode.media[media_format]["size"]
     downloads[handle][format][:downloaded] ||= 0
