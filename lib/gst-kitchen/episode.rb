@@ -1,3 +1,5 @@
+require 'sanitize'
+
 class Episode < Struct.new(:number, :name, :subtitle, :length, :media, :auphonic_uuid, :published_at, :summary, :chapters)
   include Comparable
 
@@ -84,6 +86,10 @@ class Episode < Struct.new(:number, :name, :subtitle, :length, :media, :auphonic
 
   def rfc_2822_date
     self.published_at.rfc2822
+  end
+
+  def flattr_auto_submit_link
+    "https://flattr.com/submit/auto?user_id=#{podcast.flattr["user_id"]}&url=#{CGI.escape podcast.deep_link_url(self)}&title=#{CGI.escape self.title}&description=#{CGI.escape Sanitize.clean(self.subtitle)}&language=#{podcast.flattr["language"]}&tags=#{podcast.flattr["tags"].join(',')}&category=#{podcast.flattr["category"]}"
   end
 
   def duration
