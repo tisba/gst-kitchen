@@ -23,7 +23,7 @@ describe Episode do
           "length" => 1234,
           "metadata" => {
             "title" => "GST023 - Rikeripsum",
-            "subtitle" => "Rikeripsum",
+            "subtitle" => "Talk about going nowhere fast. Mr. Worf, you sound like a man who's asking his friend if he can start dating his sister.",
             "summary" => "summary"
           },
           "output_files" => [
@@ -39,6 +39,7 @@ describe Episode do
       episode = Episode.from_auphonic podcast, production
       episode.number.should == 23
       episode.name.should == "Rikeripsum"
+      episode.subtitle.should == "Talk about going nowhere fast. Mr. Worf, you sound like a man who's asking his friend if he can start dating his sister."
       episode.length.should == 1234
       episode.auphonic_uuid.should == "id"
       episode.published_at.should == now

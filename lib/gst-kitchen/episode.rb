@@ -1,4 +1,4 @@
-class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :published_at, :summary, :chapters)
+class Episode < Struct.new(:number, :name, :subtitle, :length, :media, :auphonic_uuid, :published_at, :summary, :chapters)
   include Comparable
 
   attr_accessor :podcast
@@ -10,6 +10,7 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
       episode = self.new podcast
       episode.number = metadata[:number]
       episode.name   = metadata[:name]
+      episode.subtitle = metadata[:subtitle]
       episode.length = metadata[:length].round
       episode.auphonic_uuid = metadata[:auphonic_uuid]
       episode.published_at = Time.now
@@ -30,6 +31,10 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
       title.match(/#{handle}(\d{3})/) { |match| match[1].to_i }
     end
 
+    def extract_name(handle, title)
+      title.match(/#{handle}\d{3} ?- ?(.*)$/) { |match| match[1] }
+    end
+
     def extract_episode_data_from_auphonic(podcast, production)
       data = production.meta
 
@@ -37,7 +42,8 @@ class Episode < Struct.new(:number, :name, :length, :media, :auphonic_uuid, :pub
         auphonic_uuid: data["data"]["uuid"],
         number: extract_episode_number(podcast.handle, data["data"]["metadata"]["title"]),
         length: data["data"]["length"],
-        name: data["data"]["metadata"]["subtitle"].strip,
+        name: extract_name(podcast.handle, data["data"]["metadata"]["title"]),
+        subtitle: data["data"]["metadata"]["subtitle"].strip,
         summary: data["data"]["metadata"]["summary"].strip,
       }
 
