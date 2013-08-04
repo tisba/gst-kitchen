@@ -36,8 +36,8 @@ gst-kitchen assumes various conventions about (file) naming and URLs.
 * feeds: feeds must be located at: `<website_url>/episodes.<format_file_ext>.rss`, e.g. `http://geekstammtisch.de/episodes.m4a.rss`
 * episode media files must be located at: `<media_url>/<downcased handle><padded episode_nr>.<format_file_ext>`, e.g. `http://media.geekstammtisch.de/episodes/gst000.m4a`
 
-Meta data from each episodes is read from your Auphonic production. The episode number is read from the `title`,
-which must start with `<handle><number>`. The episode name is read from `subtitle`, summary and description is
+Meta data from each episodes is read from your Auphonic production. The episode number and name is read from the `title`,
+which must start with `<handle><number>`. The summary and description is
 set to Auphonic's `summary` field. File sizes, playtime etc. are also read from the production.
 
 
