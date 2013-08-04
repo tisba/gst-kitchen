@@ -53,9 +53,11 @@ when "stats"
   while (logline = STDIN.gets)
     # 93.194.154.91 - - [13/Dec/2012:16:22:38 +0100] "GET /episodes/gst000.m4a HTTP/1.1" 200 18676513 "-" "iTunes/11.0 (Macintosh; OS X 10.8.2) AppleWebKit/536.26.14"
 
-    / - - \[(?<date>.*?)\].*?(?<filename>gst\d{3}\..*?) .*?2\d\d (?<size>\d+) / =~ logline
+    next unless log_line_match = / - - \[(.*?)\].*?(#{podcast.handle.downcase}\d{3}\..*?) .*?2\d\d (\d+) /.match(logline)
 
-    next unless filename
+    _date = log_line_match[1]
+    filename = log_line_match[2]
+    size = log_line_match[3]
 
     handle, format = filename.split(".")
 
