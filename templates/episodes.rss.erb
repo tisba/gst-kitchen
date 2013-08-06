@@ -36,7 +36,7 @@
           <title><%= CGI.escape_html episode.title %></title>
           <itunes:explicit><%= @podcast.explicit ? "yes" : "no" %></itunes:explicit>
           <itunes:author><%= @podcast.author %></itunes:author>
-          <itunes:subtitle><%= CGI.escape_html episode.title %></itunes:subtitle>
+          <itunes:subtitle><%= CGI.escape_html episode.subtitle %></itunes:subtitle>
           <enclosure url="<%= @podcast.episode_media_url(episode, @format) %>" length="<%= episode.media[@format.format]["size"] %>" type="<%= @format.mime_type %>"/>
           <guid isPermaLink="false"><%= episode.handle %></guid>
           <pubDate><%= episode.rfc_2822_date %></pubDate>
