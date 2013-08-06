@@ -83,7 +83,7 @@ class Podcast
   end
 
   def flattr_auto_submit_link
-    "https://flattr.com/submit/auto?user_id=#{self.flattr["user_id"]}&url=#{CGI.escape self.website}&title=#{CGI.escape self.title}&description=#{CGI.escape self.subtitle}&language=#{podcast.flattr["language"]}&tags=#{self.flattr["tags"].join(',')}&category=#{self.flattr["category"]}"
+    Flattr.auto_submit_link(self, self.website, self.title, self.subtitle)
   end
 
   def podcast
