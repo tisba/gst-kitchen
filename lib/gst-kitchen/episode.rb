@@ -1,5 +1,3 @@
-require 'sanitize'
-
 class Episode < Struct.new(:number, :name, :subtitle, :length, :media, :auphonic_uuid, :published_at, :summary, :chapters)
   include Comparable
 

@@ -23,7 +23,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "trollop"
   gem.add_dependency "rake"
   gem.add_dependency "redcarpet"
-  gem.add_dependency "sanitize", "~> 2.0.6"
 
   gem.add_development_dependency "debugger"
   gem.add_development_dependency "rspec"
