@@ -50,7 +50,6 @@ describe Episode do
     end
   end
 
-
   it "should have a handle" do
     podcast = double("podcast")
     podcast.stub(:handle).and_return("GST")
@@ -59,6 +58,20 @@ describe Episode do
     subject.number = 42
 
     subject.handle.should == "GST042"
+  end
+
+  it "should generate flattr urls" do
+    podcast = double("podcast")
+    podcast.stub(:flattr).and_return({"user_id" => "gst-podcast", "language" => "de_DE", "tags" => %w(geek stammtisch podcast), "category" => "audio"})
+    podcast.stub(:deep_link_url) { "http://geekstammtisch.de/#GST001" }
+
+    subject.podcast = podcast
+    subject.name = "GST001 - Meine Tolle Folge"
+    subject.subtitle = "Eine tolle Folge mit viel Blafasel"
+
+    Flattr.should_receive(:auto_submit_link).with(podcast, "http://geekstammtisch.de/#GST001", "GST001 - Meine Tolle Folge", "Eine tolle Folge mit viel Blafasel")
+
+    subject.flattr_auto_submit_link
   end
 
   it "should have a title" do

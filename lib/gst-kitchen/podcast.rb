@@ -12,7 +12,8 @@ class Podcast
                 :episodes,
                 :explicit,
                 :rss_output_path,
-                :episodes_path
+                :episodes_path,
+                :flattr
 
   attr_accessor :formats
 
@@ -29,6 +30,7 @@ class Podcast
     podcast.handle = hash["handle"]
     podcast.website = hash["website"]
     podcast.cover = hash["cover"]
+    podcast.flattr = hash["flattr"]
     podcast.media_url = hash["media_url"]
     podcast.explicit = hash["explicit"] || false
     podcast.formats = hash["formats"].map { |format| Media.format(format) }
@@ -78,6 +80,10 @@ class Podcast
     url = URI(self.website)
     url.fragment = episode.handle
     url.to_s
+  end
+
+  def flattr_auto_submit_link
+    Flattr.auto_submit_link(self, self.website, self.title, self.subtitle)
   end
 
   def podcast

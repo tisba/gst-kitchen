@@ -86,6 +86,10 @@ class Episode < Struct.new(:number, :name, :subtitle, :length, :media, :auphonic
     self.published_at.rfc2822
   end
 
+  def flattr_auto_submit_link
+    Flattr.auto_submit_link(podcast, podcast.deep_link_url(self), self.name, self.subtitle)
+  end
+
   def duration
     hours = length / (60 * 60)
     minutes = (length - hours * 60 * 60) / 60
