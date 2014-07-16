@@ -1,9 +1,24 @@
 class Auphonic::Account
   attr_reader :username, :password
 
-  def self.init_from_system
-    auphonic_credentials = Yajl::Parser.parse(File.read(File.expand_path("~/.auphonic")))
-    self.new(auphonic_credentials)
+  class << self
+    def init_from_system
+      auphonic_credentials = if File.exist?(local_config)
+                               Yajl::Parser.parse File.read(local_config)
+                             else
+                               Yajl::Parser.parse File.read(user_config)
+                             end
+
+      self.new(auphonic_credentials)
+    end
+
+    def user_config
+      File.expand_path("~/.auphonic")
+    end
+
+    def local_config
+      File.join(Dir.getwd, '.auphonic')
+    end
   end
 
   def initialize(options={})
